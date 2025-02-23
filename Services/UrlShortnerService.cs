@@ -10,7 +10,7 @@ namespace UrlShortner.Services
         private readonly IUrlShortnerRepository _urlShortner;
         private readonly HttpContext _httpContext;
 
-        public UrlShortnerService(IUrlShortnerRepository urlShortner
+        public UrlShortnerService(IUrlShortnerRepository urlShortner,
             HttpContext httpContext)
         {
             _urlShortner = urlShortner;

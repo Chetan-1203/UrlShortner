@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using UrlShortner.Entities;
+using UrlShortner.Helper;
 using UrlShortner.Services;
 
 namespace UrlShortner.Infrastructure
@@ -12,7 +13,7 @@ namespace UrlShortner.Infrastructure
             modelBuilder.Entity<ShortenedUrl>(builder =>
             {
                 builder.Property(url => url.Code)
-                .HasMaxLength(UrlShortnerService.CharsInShortLink);
+                .HasMaxLength(CodeGenerator.CharsInShortLink);
                 builder.HasIndex(url => url.Code).IsUnique();
             });
         }
