@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using UrlShortner.Entities;
+using UrlShortner.Infrastructure;
+using UrlShortner.Infrastructure.Repositories;
 using UrlShortner.Models;
 using UrlShortner.Services;
 
@@ -5,10 +9,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<ApplicationDbContext>(o =>
+o.UseSqlServer(builder.Configuration.GetConnectionString("Database")));
+builder.Services.AddScoped<IUrlShortnerRepository ,UrlShortnerRepository>();
+builder.Services.AddScoped<UrlShortnerService>();
 
 var app = builder.Build();
 
