@@ -8,20 +8,18 @@ namespace UrlShortner.Services
     public class UrlShortnerService
     {
         private readonly IUrlShortnerRepository _urlShortner;
-        private readonly HttpContext _httpContext;
 
-        public UrlShortnerService(IUrlShortnerRepository urlShortner,
-            HttpContext httpContext)
+        public UrlShortnerService(IUrlShortnerRepository urlShortner)
         {
             _urlShortner = urlShortner;
-            _httpContext = httpContext;
         }
 
-        public async Task<string> SaveShortenedUrl(UrlShortnerRequest request)
+        public async Task<string> SaveShortenedUrl(UrlShortnerRequest request,
+            HttpContext context)
         {
             var code = CodeGenerator.GenerateCode();
-            var shortUrl = $"{_httpContext.Request.Scheme}" +
-                $"://{_httpContext.Request.Host}/api/{code}";
+            var shortUrl = $"{context.Request.Scheme}" +
+                $"://{context.Request.Host}/api/{code}";
             var shortnedUrl = new ShortenedUrl(code,
                 request.Url,
                 shortUrl);

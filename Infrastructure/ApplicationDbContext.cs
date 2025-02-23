@@ -1,13 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using UrlShortner.Entities;
 using UrlShortner.Helper;
-using UrlShortner.Services;
+
 
 namespace UrlShortner.Infrastructure
 {
     public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
     {    
-        public DbSet<ShortenedUrl> ShortenUrls { get; set; }
+        public DbSet<ShortenedUrl> ShortenedUrls { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ShortenedUrl>(builder =>

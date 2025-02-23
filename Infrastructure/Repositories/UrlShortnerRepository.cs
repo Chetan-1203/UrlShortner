@@ -16,8 +16,8 @@ namespace UrlShortner.Infrastructure.Repositories
         {
             while (true)
             {
-                if (!_dbcontext.ShortenUrls.Any(url => url.Code.Equals(code))){
-                    await _dbcontext.ShortenUrls.AddAsync(request);
+                if (!_dbcontext.ShortenedUrls.Any(url => url.Code.Equals(code))){
+                    await _dbcontext.ShortenedUrls.AddAsync(request);
                     await _dbcontext.SaveChangesAsync();
                     return request.ShortUrl;
                 }
