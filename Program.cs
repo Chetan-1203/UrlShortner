@@ -1,7 +1,7 @@
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson;
 using UrlShortner.Entities;
-using UrlShortner.Infrastructure;
-using UrlShortner.Infrastructure.Extension;
 using UrlShortner.Infrastructure.Repositories;
 using UrlShortner.Models;
 using UrlShortner.Services;
@@ -13,11 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<ApplicationDbContext>(o =>
-o.UseSqlServer(builder.Configuration.GetConnectionString("Database")));
-builder.Services.AddScoped<IUrlShortnerRepository ,UrlShortnerRepository>();
-//builder.Services.AddScoped<HttpContext>();
-builder.Services.AddScoped<UrlShortnerService>();
+BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
+builder.Services.AddScoped<IUrlShortenerRepository ,UrlShortenerRepository>();
+builder.Services.AddScoped<UrlShortenerService>();
 
 var app = builder.Build();
 
@@ -26,12 +24,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.ApplyMigrations();
 }
 
 app.MapPost("api/shorten", async (
-    UrlShortnerRequest request,
-    UrlShortnerService urlShortnerService,
+    UrlShortenerRequest request,
+    UrlShortenerService urlShortnerService,
     HttpContext context
     ) => {
 

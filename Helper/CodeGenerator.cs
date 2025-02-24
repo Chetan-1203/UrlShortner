@@ -1,4 +1,6 @@
-﻿namespace UrlShortner.Helper
+﻿using System.Text;
+
+namespace UrlShortner.Helper
 {
     public static class CodeGenerator
     {
@@ -9,15 +11,14 @@
         public static string GenerateCode()
         {
             Random random = new();
-            char[] code = new char[CharsInShortLink];
+            StringBuilder code = new(CharsInShortLink);
 
             for (int i = 0; i < CharsInShortLink; i++)
             {
-                var randomIndex = random.Next(Characters.Length - 1);
-                code[i] = Characters[randomIndex];
+                code.Append(Characters[random.Next(Characters.Length)]);
             }
 
-            return code.ToString() ?? string.Empty;
+            return code.ToString();
         }
     }
 }
