@@ -17,15 +17,19 @@ namespace UrlShortner.Services
         public async Task<string> SaveShortenedUrl(UrlShortenerRequest request,
             HttpContext context)
         {
-            while (true)
+            if (await _urlShortener.IsOriginalUrlPresent(request.Url))
             {
+                return await _urlShortener.GetShortenUrl(request.Url);
+            }
+            while (true)
+            {   
                 var code = CodeGenerator.GenerateCode();
                 var shortUrl = $"{context.Request.Scheme}" +
                                $"://{context.Request.Host}/api/{code}";
                 var shortenedUrl = new ShortenedUrl(code,
                     request.Url,
                     shortUrl);
-                if (!await _urlShortener.IsCodePresent(shortenedUrl, code))
+                if (!await _urlShortener.IsCodePresent(code))
                 {  
                     await _urlShortener.SaveShortenUrl(shortenedUrl, code);
                     return shortenedUrl.ShortUrl;
@@ -34,5 +38,19 @@ namespace UrlShortner.Services
             }
 
         }
+
+        public async Task<string> Redirect(string code)
+        {
+            if (await _urlShortener.IsCodePresent(code))
+            {
+                var originalUrl = await _urlShortener.GetOriginalUrl(code);
+                return originalUrl;
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+       
     }
 }

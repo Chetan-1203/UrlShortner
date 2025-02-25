@@ -28,7 +28,7 @@ if (app.Environment.IsDevelopment())
 
 app.MapPost("api/shorten", async (
     UrlShortenerRequest request,
-    UrlShortenerService urlShortnerService,
+    UrlShortenerService urlShortenerService,
     HttpContext context
     ) => {
 
@@ -37,11 +37,26 @@ app.MapPost("api/shorten", async (
             return Results.BadRequest("Invalid url");
         }
 
-        var shortnedUrl =  await urlShortnerService.SaveShortenedUrl(request,context);
+        var shortnedUrl =  await urlShortenerService.SaveShortenedUrl(request,context);
 
         return Results.Ok(shortnedUrl);
 
     });
+
+app.MapGet("api/{code}", async (string code,
+        UrlShortenerService urlShortenerService)
+    =>
+{
+   var url = await urlShortenerService.Redirect(code);
+   if (!string.IsNullOrEmpty(url))
+   {
+      return Results.Redirect(url);
+   }
+   else
+   {
+        return Results.NotFound();
+   }
+});
 
 app.UseHttpsRedirection();
 
